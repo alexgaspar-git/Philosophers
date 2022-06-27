@@ -1,29 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: algaspar <algaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/26 16:47:36 by algaspar          #+#    #+#             */
-/*   Updated: 2022/06/26 17:46:28 by algaspar         ###   ########.fr       */
+/*   Created: 2022/06/27 15:22:50 by algaspar          #+#    #+#             */
+/*   Updated: 2022/06/27 15:33:16 by algaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <sys/time.h>
-
-typedef struct s_philo
-{
-	int	numphilo;
-	int t_td;
-	int	t_te;
-	int	t_ts;
-	int	iterations;
-}	t_philo;
+#include "philo.h"
 
 uint64_t	get_time(void)
 {
@@ -46,7 +33,7 @@ void	my_sleep(uint64_t time)
 	}
 }
 
-int	ft_isdigit(int c)
+static int	ft_isdigit(int c)
 {
 	if (c >= '0' && c <= '9')
 		return (1);
@@ -54,7 +41,7 @@ int	ft_isdigit(int c)
 		return (0);
 }
 
-int	ft_atoi(const char *str)
+long	ft_atoi(const char *str)
 {
 	long	i;
 	long	nbr;
@@ -83,42 +70,17 @@ int	ft_atoi(const char *str)
 	return (nbr);
 }
 
-int	parsing(int argc, char **argv, t_philo *philo)
+int	check_arg(char *arg)
 {
-	int i;
-
-	i = 1;
-	while (i < argc)
+	int	i = 0;
+	
+	while (arg[i])
 	{
-		if (ft_atoi(argv[i]) < 0)
+		if (!ft_isdigit(arg[i]))
 			return (0);
 		i++;
 	}
-	philo->numphilo = ft_atoi(argv[1]);
-	philo->t_td = ft_atoi(argv[2]);
-	philo->t_te = ft_atoi(argv[3]);
-	philo->t_ts = ft_atoi(argv[4]);
-	if (argc == 6)
-		philo->iterations = ft_atoi(argv[5]);
-	else
-		philo->iterations = 0;
+	if (ft_atoi(arg) < 0 || ft_atoi(arg) > 2147483647)
+		return (0);
 	return (1);
-}
-
-int	main(int argc, char **argv)
-{
-	t_philo philo;
-
-	if (argc < 5 || argc > 6)
-	{
-		write(2, "Invalid number of arguments\n", 28);
-		return (1);
-	}
-	if (!parsing(argc, argv, &philo))
-	{
-		write(2, "Invalid argument data\n", 22);
-		return (2);
-	}
-	
-	return (0);
 }
