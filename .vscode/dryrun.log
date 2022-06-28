@@ -1,0 +1,7 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/algaspar/Desktop/19/Philosophers'
+gcc -Iinclude   -c -o src/philo.o src/philo.c
+gcc -Iinclude   -c -o src/utils.o src/utils.c
+gcc -Iinclude -o philo src/philo.o src/utils.o
+make: Leaving directory `/Users/algaspar/Desktop/19/Philosophers'
+ 

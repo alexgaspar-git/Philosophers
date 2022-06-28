@@ -6,28 +6,28 @@
 /*   By: algaspar <algaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 15:22:50 by algaspar          #+#    #+#             */
-/*   Updated: 2022/06/27 15:33:16 by algaspar         ###   ########.fr       */
+/*   Updated: 2022/06/28 19:59:38 by algaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-uint64_t	get_time(void)
+uint64_t	get_time(u_int64_t start_time)
 {
 	static struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * (uint64_t)1000) + (tv.tv_usec / 1000));
+	return ((tv.tv_sec * (uint64_t)1000) + (tv.tv_usec / 1000) - start_time);
 }
 
 void	my_sleep(uint64_t time)
 {
 	uint64_t	i;
 
-	i = get_time();
+	i = get_time(0);
 	while (1)
 	{
-		if (get_time() - i >= time)
+		if (get_time(0) - i >= time)
 			break ;
 		usleep(50);
 	}
