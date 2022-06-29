@@ -1,7 +1,6 @@
 SRCS		= 	philo.c \
-				utils.c
-
-SRCS		:= $(addprefix src/,$(SRCS))
+				time.c \
+				parsing.c
 
 OBJS		= ${SRCS:.c=.o}
 
@@ -13,7 +12,7 @@ MAKE		= make
 
 RM			= rm -rf
 
-CFLAGS		= -Wall -Werror -Wextra -pthread -Iinclude
+CFLAGS		= -Wall -Werror -Wextra -pthread
 
 $(NAME):	$(OBJS)
 			$(CC) ${CFLAGS} -o $(NAME) $(OBJS)

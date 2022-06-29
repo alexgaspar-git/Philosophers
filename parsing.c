@@ -1,37 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: algaspar <algaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/27 15:22:50 by algaspar          #+#    #+#             */
-/*   Updated: 2022/06/28 19:59:38 by algaspar         ###   ########.fr       */
+/*   Created: 2022/06/29 21:05:58 by algaspar          #+#    #+#             */
+/*   Updated: 2022/06/29 22:11:29 by algaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-uint64_t	get_time(u_int64_t start_time)
-{
-	static struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * (uint64_t)1000) + (tv.tv_usec / 1000) - start_time);
-}
-
-void	my_sleep(uint64_t time)
-{
-	uint64_t	i;
-
-	i = get_time(0);
-	while (1)
-	{
-		if (get_time(0) - i >= time)
-			break ;
-		usleep(50);
-	}
-}
 
 static int	ft_isdigit(int c)
 {
@@ -41,7 +20,7 @@ static int	ft_isdigit(int c)
 		return (0);
 }
 
-long	ft_atoi(const char *str)
+static long	ft_atoi(const char *str)
 {
 	long	i;
 	long	nbr;
@@ -70,7 +49,7 @@ long	ft_atoi(const char *str)
 	return (nbr);
 }
 
-int	check_arg(char *arg)
+static int	check_arg(char *arg)
 {
 	int	i = 0;
 	
@@ -82,5 +61,35 @@ int	check_arg(char *arg)
 	}
 	if (ft_atoi(arg) < 0 || ft_atoi(arg) > 2147483647)
 		return (0);
+	return (1);
+}
+
+static int	invalid_args(int argc, char **argv)
+{
+	int i;
+
+	i = 1;
+	while (i < argc)
+	{
+		if (!check_arg(argv[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	init_instructions(int argc, char **argv, t_instr *instr)
+{
+	if (!invalid_args(argc, argv))
+		return (0);
+	instr->philos = (int)ft_atoi(argv[1]);
+	instr->t_tdie = (int)ft_atoi(argv[2]);
+	instr->t_teat = (int)ft_atoi(argv[3]);
+	instr->t_tsleep = (int)ft_atoi(argv[4]);
+	instr->active = 1;
+	instr->start_time = get_time(0);
+	instr->iterations = 0;
+	if (argc == 6)
+		instr->iterations = (int)ft_atoi(argv[5]);
 	return (1);
 }
