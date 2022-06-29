@@ -6,7 +6,7 @@
 /*   By: algaspar <algaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 21:06:54 by algaspar          #+#    #+#             */
-/*   Updated: 2022/06/29 22:07:23 by algaspar         ###   ########.fr       */
+/*   Updated: 2022/06/29 22:26:57 by algaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct s_philo
 	t_instr			*instr;
 }	t_philo;
 
-uint64_t	get_time(u_int64_t start_time);
+uint64_t	get_time(void);
 void		my_sleep(uint64_t time);
 void		print_time(t_philo *philo, const char *message);
 int			init_instructions(int argc, char **argv, t_instr *instr);

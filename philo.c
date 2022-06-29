@@ -6,7 +6,7 @@
 /*   By: algaspar <algaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 21:04:53 by algaspar          #+#    #+#             */
-/*   Updated: 2022/06/29 22:14:25 by algaspar         ###   ########.fr       */
+/*   Updated: 2022/06/29 22:32:49 by algaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,21 @@ int	init_mutex(t_philo *philo, t_instr *instr)
 	return (1);
 }
 
+void	philo_routine(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->fork);
+	print_time(philo, "has taken a fork");
+	pthread_mutex_lock(&philo->nextphilo->fork);
+	print_time(philo, "has taken a fork");
+	print_time(philo, "is eating");
+	my_sleep(philo->instr->t_teat);
+	pthread_mutex_unlock(&philo->fork);
+	pthread_mutex_unlock(&philo->nextphilo->fork);
+	print_time(philo, "is sleeping");
+	my_sleep(philo->instr->t_tsleep);
+	print_time(philo, "is thinking");
+}
+
 void	*philo_main(void *arg)
 {
 	t_philo *philo;
@@ -51,7 +66,12 @@ void	*philo_main(void *arg)
 	philo = (t_philo *)arg;
 	if (philo->index % 2 == 0)
 		my_sleep(50);
-	
+	while (1)
+	{
+		philo_routine(philo);
+		if (philo->instr->active == 0)
+			break ;
+	}
 	return (0);
 }
 
