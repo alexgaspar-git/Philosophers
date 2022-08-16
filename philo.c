@@ -21,9 +21,11 @@ void	init_philos(t_philo *philo, t_instr *instr)
 	while (i >= 0)
 	{
 		philo[i].index = i;
+		philo[i].instr = instr;
+		philo[i].last_meal = get_time();
+		philo[i].times_eaten = 0;
 		if (i < instr->philos - 1)
 			philo[i].nextphilo = &philo[i + 1];
-		philo[i].instr = instr;
 		i--;
 	}
 }
@@ -48,10 +50,17 @@ void	philo_routine(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->fork);
 	print_time(philo, "has taken a fork");
+	if (philo->instr->philos < 2)
+	{
+		my_sleep(philo->instr->t_tdie + 100);
+		return ;
+	}
 	pthread_mutex_lock(&philo->nextphilo->fork);
 	print_time(philo, "has taken a fork");
 	print_time(philo, "is eating");
+	philo->last_meal = get_time();
 	my_sleep(philo->instr->t_teat);
+	philo->times_eaten += 1;
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->nextphilo->fork);
 	print_time(philo, "is sleeping");
@@ -64,15 +73,46 @@ void	*philo_main(void *arg)
 	t_philo *philo;
 
 	philo = (t_philo *)arg;
-	if (philo->index % 2 == 0)
+	if (philo->index % 2 == 1)
 		my_sleep(50);
 	while (1)
 	{
 		philo_routine(philo);
+		if (philo->times_eaten == philo->instr->iterations)
+		{
+			philo->instr->philos_finished += 1;
+			break ;
+		}
 		if (philo->instr->active == 0)
 			break ;
 	}
 	return (0);
+}
+
+
+void	check_death(t_philo *philo, t_instr *instr)
+{
+	int	i;
+
+	while (instr->active)
+	{
+		i = 0;
+		while (i < instr->philos)
+		{
+			if (instr->philos_finished == instr->philos)
+			{
+				instr->active = 0;
+				break;
+			}
+			if (get_time() > (philo + i)->last_meal + instr->t_tdie)
+			{
+				print_time(philo + i, "died");
+				instr->active = 0;
+				break ;
+			}
+			i++;
+		}
+	}
 }
 
 int	start_philo(t_instr *instr)
@@ -93,6 +133,7 @@ int	start_philo(t_instr *instr)
 			return (0);
 		i++;
 	}
+	check_death(philo, instr);
 	i = 0;
 	while (i < instr->philos)
 	{

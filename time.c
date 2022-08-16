@@ -40,6 +40,6 @@ void	print_time(t_philo *philo, const char *message)
 	time = get_time() - philo->instr->start_time;
 	pthread_mutex_lock(&philo->instr->print);
 	if (philo->instr->active == 1)
-		printf("%llu %d %s\n", time, philo->index, message);	
+		printf("%lu %d %s\n", time, philo->index + 1, message);	
 	pthread_mutex_unlock(&philo->instr->print);
 }

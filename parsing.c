@@ -88,8 +88,12 @@ int	init_instructions(int argc, char **argv, t_instr *instr)
 	instr->t_tsleep = (int)ft_atoi(argv[4]);
 	instr->active = 1;
 	instr->start_time = get_time();
-	instr->iterations = 0;
+	instr->iterations = -1;
 	if (argc == 6)
+	{
 		instr->iterations = (int)ft_atoi(argv[5]);
+		if (instr->iterations == 0)
+			instr->active = 0;
+	}
 	return (1);
 }
