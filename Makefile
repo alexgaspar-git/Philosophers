@@ -12,7 +12,7 @@ MAKE		= make
 
 RM			= rm -rf
 
-CFLAGS		= -Wall -Werror -Wextra -pthread
+CFLAGS		= -Wall -Wextra -pthread
 
 $(NAME):	$(OBJS)
 			$(CC) ${CFLAGS} -o $(NAME) $(OBJS)

@@ -6,7 +6,7 @@
 /*   By: algaspar <algaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 21:05:58 by algaspar          #+#    #+#             */
-/*   Updated: 2022/06/29 22:27:09 by algaspar         ###   ########.fr       */
+/*   Updated: 2022/08/17 19:23:02 by algaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,9 @@ static long	ft_atoi(const char *str)
 
 static int	check_arg(char *arg)
 {
-	int	i = 0;
-	
+	int	i;
+
+	i = 0;
 	while (arg[i])
 	{
 		if (!ft_isdigit(arg[i]))
@@ -66,7 +67,7 @@ static int	check_arg(char *arg)
 
 static int	invalid_args(int argc, char **argv)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (i < argc)
@@ -88,12 +89,10 @@ int	init_instructions(int argc, char **argv, t_instr *instr)
 	instr->t_tsleep = (int)ft_atoi(argv[4]);
 	instr->active = 1;
 	instr->start_time = get_time();
-	instr->iterations = -1;
+	instr->it = -1;
 	if (argc == 6)
-	{
-		instr->iterations = (int)ft_atoi(argv[5]);
-		if (instr->iterations == 0)
-			instr->active = 0;
-	}
+		instr->it = (int)ft_atoi(argv[5]);
+	if (instr->it == 0 || instr->philos == 0)
+		instr->active = 0;
 	return (1);
 }

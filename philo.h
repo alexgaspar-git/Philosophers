@@ -6,7 +6,7 @@
 /*   By: algaspar <algaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 21:06:54 by algaspar          #+#    #+#             */
-/*   Updated: 2022/06/29 22:26:57 by algaspar         ###   ########.fr       */
+/*   Updated: 2022/08/17 19:21:22 by algaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <unistd.h>
 # include <pthread.h>
 # include <sys/time.h>
+# include <stdatomic.h>
+# include <stdbool.h>
 
 typedef struct s_instr
 {
@@ -26,22 +28,22 @@ typedef struct s_instr
 	int				t_tdie;
 	int				t_teat;
 	int				t_tsleep;
-	int				iterations;
+	int				it;
 	int				philos_finished;
-	int				active;
+	atomic_bool		active;
 	u_int64_t		start_time;
 	pthread_mutex_t print;
 }	t_instr;
 
 typedef struct s_philo
 {
-	pthread_t		thread;
-	int				index;
-	uint64_t		last_meal;
-	int				times_eaten;
-	pthread_mutex_t fork;
-	struct s_philo	*nextphilo;
-	t_instr			*instr;
+	pthread_t				thread;
+	int						index;
+	atomic_uint_fast64_t	last_meal;
+	int						times_eaten;
+	pthread_mutex_t 		fork;
+	struct s_philo			*nextphilo;
+	t_instr					*instr;
 }	t_philo;
 
 uint64_t	get_time(void);

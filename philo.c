@@ -6,7 +6,7 @@
 /*   By: algaspar <algaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 21:04:53 by algaspar          #+#    #+#             */
-/*   Updated: 2022/06/29 22:32:49 by algaspar         ###   ########.fr       */
+/*   Updated: 2022/08/17 19:23:36 by algaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ int	init_mutex(t_philo *philo, t_instr *instr)
 	return (1);
 }
 
-void	philo_routine(t_philo *philo)
+bool	philo_routine(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->fork);
 	print_time(philo, "has taken a fork");
 	if (philo->instr->philos < 2)
 	{
 		my_sleep(philo->instr->t_tdie + 100);
-		return ;
+		return (true);
 	}
 	pthread_mutex_lock(&philo->nextphilo->fork);
 	print_time(philo, "has taken a fork");
@@ -63,32 +63,27 @@ void	philo_routine(t_philo *philo)
 	philo->times_eaten += 1;
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->nextphilo->fork);
+	philo->instr->philos_finished += philo->times_eaten == philo->instr->it;
+	if (philo->instr->active == 0)
+		return (true);
 	print_time(philo, "is sleeping");
 	my_sleep(philo->instr->t_tsleep);
 	print_time(philo, "is thinking");
+	return (!philo->instr->active);
 }
 
 void	*philo_main(void *arg)
 {
-	t_philo *philo;
+	t_philo	*philo;
 
 	philo = (t_philo *)arg;
 	if (philo->index % 2 == 1)
 		my_sleep(50);
 	while (1)
-	{
-		philo_routine(philo);
-		if (philo->times_eaten == philo->instr->iterations)
-		{
-			philo->instr->philos_finished += 1;
+		if (philo_routine(philo))
 			break ;
-		}
-		if (philo->instr->active == 0)
-			break ;
-	}
 	return (0);
 }
-
 
 void	check_death(t_philo *philo, t_instr *instr)
 {
@@ -102,23 +97,22 @@ void	check_death(t_philo *philo, t_instr *instr)
 			if (instr->philos_finished == instr->philos)
 			{
 				instr->active = 0;
-				break;
+				break ;
 			}
 			if (get_time() > (philo + i)->last_meal + instr->t_tdie)
 			{
-				print_time(philo + i, "died");
 				instr->active = 0;
+				print_time(philo + i, "died");
 				break ;
 			}
-			i++;
 		}
 	}
 }
 
 int	start_philo(t_instr *instr)
 {
-	int	i;
-	t_philo *philo;
+	int		i;
+	t_philo	*philo;
 
 	philo = malloc(sizeof(t_philo) * instr->philos);
 	if (!philo)
@@ -129,7 +123,7 @@ int	start_philo(t_instr *instr)
 	i = 0;
 	while (i < instr->philos)
 	{
-		if (pthread_create(&philo[i].thread, NULL, (void *)philo_main, philo + i) != 0)
+		if (pthread_create(&philo[i].thread, NULL, philo_main, philo + i) != 0)
 			return (0);
 		i++;
 	}
@@ -146,7 +140,7 @@ int	start_philo(t_instr *instr)
 
 int	main(int argc, char **argv)
 {
-	t_instr instr;
+	t_instr	instr;
 
 	if (argc < 5 || argc > 6)
 		return (write(2, "Invalid number of arguments\n", 28));

@@ -6,7 +6,7 @@
 /*   By: algaspar <algaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 21:05:07 by algaspar          #+#    #+#             */
-/*   Updated: 2022/06/29 22:27:54 by algaspar         ###   ########.fr       */
+/*   Updated: 2022/08/17 19:24:36 by algaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,14 @@ void	my_sleep(uint64_t time)
 	}
 }
 
+#include <string.h>
 void	print_time(t_philo *philo, const char *message)
 {
 	u_int64_t time;
 
 	time = get_time() - philo->instr->start_time;
 	pthread_mutex_lock(&philo->instr->print);
-	if (philo->instr->active == 1)
-		printf("%lu %d %s\n", time, philo->index + 1, message);	
+	if (philo->instr->active || !strcmp(message, "died"))
+		printf("%llu %d %s\n", time, philo->index + 1, message);	
 	pthread_mutex_unlock(&philo->instr->print);
 }
