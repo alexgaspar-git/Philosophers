@@ -1,7 +1,8 @@
 SRCS		= 	philo.c \
 				time.c \
 				parsing.c \
-				routine.c
+				routine.c \
+				init.c
 
 OBJS		= ${SRCS:.c=.o}
 

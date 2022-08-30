@@ -6,7 +6,7 @@
 /*   By: algaspar <algaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 21:06:54 by algaspar          #+#    #+#             */
-/*   Updated: 2022/08/25 19:24:11 by algaspar         ###   ########.fr       */
+/*   Updated: 2022/08/30 17:42:54 by algaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,7 @@ void		my_sleep(uint64_t time);
 void		*philo_main(void *arg);
 void		print_time(t_philo *philo, const char *message);
 int			init_instructions(int argc, char **argv, t_instr *instr);
+int			init_mutex(t_philo *philo, t_instr *instr);
+void		init_philos(t_philo *philo, t_instr *instr);
 
 #endif
