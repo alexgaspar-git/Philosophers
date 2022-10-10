@@ -6,7 +6,7 @@
 /*   By: algaspar <algaspar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 21:06:54 by algaspar          #+#    #+#             */
-/*   Updated: 2022/08/30 17:42:54 by algaspar         ###   ########.fr       */
+/*   Updated: 2022/09/05 14:22:23 by algaspar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ typedef struct s_instr
 	int				t_tdie;
 	int				t_teat;
 	int				t_tsleep;
-	int				it;
-	int				philos_finished;
+	atomic_int		it;
+	atomic_int		philos_finished;
 	atomic_bool		active;
 	u_int64_t		start_time;
 	pthread_mutex_t	print;
@@ -40,7 +40,7 @@ typedef struct s_philo
 	pthread_t				thread;
 	int						index;
 	atomic_uint_fast64_t	last_meal;
-	int						times_eaten;
+	atomic_int				times_eaten;
 	pthread_mutex_t			fork;
 	struct s_philo			*nextphilo;
 	t_instr					*instr;
